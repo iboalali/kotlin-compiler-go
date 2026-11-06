@@ -1,5 +1,6 @@
 package app
 
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -190,3 +191,17 @@ data class Page(val n: Int) : Route.Nested
 
 @Serializable
 data class Trip(val from: Route, val to: Route.Nested?)
+
+// @EncodeDefault writes a property with its default value always, or,
+// with NEVER, never, whatever the format asks.
+@Serializable
+data class Encoded(
+    val plain: Int = 1,
+    @EncodeDefault val always: String = "a",
+    @EncodeDefault(EncodeDefault.Mode.ALWAYS) val alwaysMode: Int = 2,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val never: List<String> = emptyList(),
+    @EncodeDefault(mode = EncodeDefault.Mode.NEVER) val neverNamed: Boolean = false,
+) {
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
+    var body: Int = 3
+}
