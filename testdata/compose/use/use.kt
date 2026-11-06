@@ -37,6 +37,13 @@ import app.Skips2
 import app.Varargs
 import app.Strings
 import app.Times
+import app.ExtProps
+import app.Scale
+import app.boxed
+import app.described
+import app.second
+import app.shown
+import lib.Insets
 import lib.Runs
 import app.describe
 import app.title
@@ -138,5 +145,9 @@ fun main() {
         ShowSlots(fromApp)
         Decorations(n.intValue)
         Times(n.intValue).Show(6)
+        // The program's composable extension properties.
+        ExtProps(label.value, n.intValue)
+        Text("use ${Insets.shown} ${label.value.boxed} ${listOf(1, n.intValue).second} ${n.intValue.described}")
+        Scale(n.intValue).Show(4)
     }
 }
