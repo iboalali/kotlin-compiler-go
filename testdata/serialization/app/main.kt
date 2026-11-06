@@ -35,6 +35,14 @@ fun <T> fails(name: String, s: KSerializer<T>, text: String) {
     }
 }
 
+fun <T> encodeFails(s: KSerializer<T>, v: T) {
+    try {
+        println(Json.Default.encodeToString(s, v))
+    } catch (e: Exception) {
+        println("${e.javaClass.simpleName}: ${e.message?.lines()?.first()}")
+    }
+}
+
 // A KSerializer<Any?> or a KClass<T>'s KSerializer<T>, for a T : Any, as
 // ktor's TypeInfo.serializer().
 @OptIn(InternalSerializationApi::class)
@@ -78,6 +86,17 @@ fun main() {
     check("color", Color.serializer(), Color.GREEN)
     check("stamp", Stamp.serializer(), Stamp(5L))
     check("stamp2", Stamp.serializer(), Stamp(1, 2L))
+    check("pet", Pet.serializer(), Pet.Zebra(3))
+    check("pet nested", Pet.serializer(), Pet.Wild.Fox(1))
+    check("pet cat", Pet.serializer(), Pet.Cat())
+    for (pet in listOf(Pet.Plain(1), Pet.Stray, Pet.Wild.Wolf())) {
+        encodeFails(Pet.serializer(), pet)
+    }
+    println(Pet.serializer().descriptor.getElementDescriptor(1))
+    check("shelter", Shelter.serializer(), Shelter.Kennel(2))
+    encodeFails(Shelter.serializer(), Shelter.Box())
+    encodeFails(Shelter.serializer(), Shelter.Kind.CAT)
+    println(Shelter.serializer().descriptor.getElementDescriptor(1))
     println(serializerOf(Prims::class, null).descriptor.serialName)
     println(serializerOf(Prims::class, typeOf<Prims?>()).descriptor.serialName)
 

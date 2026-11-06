@@ -3,11 +3,13 @@ import app.Color
 import app.Event
 import app.Outer
 import app.Page
+import app.Pet
 import app.Prims
 import app.Route
 import app.Shape
 import app.WithCompanion
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
@@ -30,5 +32,7 @@ fun main() {
     val sub = Json.encodeToString(Sub.serializer(), Sub(3))
     println("sub: $sub -> ${Json.decodeFromString(Sub.serializer(), sub)}")
     println("sub: ${Json.decodeFromString(Sub.serializer(), """{"id":4,"more":5}""")}")
+    val pets = Json.encodeToString(ListSerializer(Pet.serializer()), listOf(Pet.Cat(1), Pet.Wild.Fox(2)))
+    println("pets: $pets -> ${Json.decodeFromString(ListSerializer(Pet.serializer()), pets)}")
     println(serializer<Prims>().descriptor.serialName)
 }

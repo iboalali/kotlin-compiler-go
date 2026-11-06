@@ -190,3 +190,41 @@ data class Page(val n: Int) : Route.Nested
 
 @Serializable
 data class Trip(val from: Route, val to: Route.Nested?)
+
+// A sealed class's serializer has those of its subclasses that have one,
+// in the order of their names, through sealed subclasses that aren't
+// @Serializable too. It can't write the others.
+@Serializable
+sealed class Pet {
+    @Serializable
+    data class Zebra(val stripes: Int) : Pet()
+
+    data class Plain(val n: Int) : Pet()
+
+    data object Stray : Pet()
+
+    sealed class Wild : Pet() {
+        @Serializable
+        data class Fox(val tail: Int) : Wild()
+
+        class Wolf : Wild()
+    }
+
+    @Serializable
+    data class Cat(val lives: Int = 9) : Pet()
+
+    @Serializable
+    abstract class Robot : Pet()
+}
+
+@Serializable
+sealed interface Shelter {
+    @Serializable
+    data class Kennel(val size: Int) : Shelter
+
+    class Box : Shelter
+
+    enum class Kind : Shelter { DOG, CAT }
+
+    interface Other : Shelter
+}
