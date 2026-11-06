@@ -78,6 +78,30 @@ fun main() {
     check("color", Color.serializer(), Color.GREEN)
     check("stamp", Stamp.serializer(), Stamp(5L))
     check("stamp2", Stamp.serializer(), Stamp(1, 2L))
+    check("margin", Margin.serializer(), Margin(5))
+    check("label", Label.serializer(), Label("l"))
+    check("maybeLabel", MaybeLabel.serializer(), MaybeLabel(null))
+    check("boxedPoint", BoxedPoint.serializer(), BoxedPoint(LibPoint(1, 2)))
+    check("layout", Layout.serializer(), Layout(Margin(3), bp = BoxedPoint(LibPoint(4))))
+    check(
+        "layout2", Layout.serializer(),
+        Layout(Margin(3), Margin(4), Margin(5), Label("y"), MaybeLabel("z"), BoxedPoint(LibPoint(6)), listOf(Margin(7)), 8u, 9uL),
+    )
+    println(Json.Default.decodeFromString(Layout.serializer(), """{"m":1,"bp":{"x":2}}"""))
+    check("framed", Framed.serializer(), Framed())
+    check("picture", Picture.serializer(), Picture("p"))
+    println(Margin.serializer().descriptor)
+    println("${Label.serializer().descriptor} ${Label.serializer().descriptor.isInline} ${Label.serializer().descriptor.getElementName(0)}")
+    println(Layout.serializer().descriptor)
+    check("painted", Painted.serializer(), Painted(Rgb(0xABCuL), name = "x"))
+    check(
+        "painted2", Painted.serializer(),
+        Painted(Rgb(1uL), Rgb(2uL), Rgb(3uL), 4, 5, "y").apply { note = "z" },
+    )
+    println(Json.Default.decodeFromString(Painted.serializer(), """{"fg":"#10","name":"NAME","bonus":"**","note":"NOTE"}""").let { "$it ${it.note}" })
+    println(Painted.serializer().descriptor)
+    check("rating", Rating.serializer(), Rating(2))
+    println(Rating.serializer().descriptor.getElementDescriptor(0))
     println(serializerOf(Prims::class, null).descriptor.serialName)
     println(serializerOf(Prims::class, typeOf<Prims?>()).descriptor.serialName)
 
