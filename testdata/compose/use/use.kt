@@ -36,6 +36,7 @@ import app.Skips
 import app.Skips2
 import app.Varargs
 import app.Strings
+import app.Times
 import lib.Runs
 import app.describe
 import app.title
@@ -136,5 +137,6 @@ fun main() {
         ShowSlots(slots)
         ShowSlots(fromApp)
         Decorations(n.intValue)
+        Times(n.intValue).Show(6)
     }
 }
