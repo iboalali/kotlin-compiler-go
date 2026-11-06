@@ -880,6 +880,7 @@ func (p *parser) parseType() *TypeRef {
 	var as []Annotation
 	for p.at(AT) {
 		a := p.annotation()
+		p.skipNL()
 		as = append(as, a)
 		if a.Target == "receiver" {
 			// receiver takes those of a receiver type.
